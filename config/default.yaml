@@ -1,0 +1,16 @@
+%YAML:1.0
+
+# camera_config
+camera.fx: 526.6667
+camera.fy: 526.6667
+camera.cx: 313.3333
+camera.cy: 240.0
+#camera.cx: 240.0
+#camera.cy: 313.3333
+
+# front_track_config
+feature_threshold: 10
+feature_max_num: 100
+pyr_max_level: 3
+pyr_win_size: 21
+enable_show_optical_flow: 0
