@@ -42,10 +42,9 @@ make -j8
 ```
 
 BTW, you can specify opencv_dir like
-
-    ```bash
+```bash
 cmake .. -D OpenCV_DIR="your/opencv/build"
-    ```
+```
 
 The dataset directory is arranged as following:
 
