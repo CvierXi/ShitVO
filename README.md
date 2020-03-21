@@ -64,7 +64,7 @@ imu_data.txt
 
 - imu_data.txt
 
-  Data recorded as following:
+  Data is recorded as following:
 
   ```
   timestamp(unit: ms),acc[3],gry[3],att[9]
