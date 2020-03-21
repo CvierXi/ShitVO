@@ -5,10 +5,8 @@
 using namespace std;
 
 int main(int argc, char** argv) {
-    std::cout << "Hello, World!" << std::endl;
-
     if (argc < 3) {
-        cerr << "Input parameter file path!" << endl;
+        cerr << "Usage: ./bin/demo_homo_vo ../config/default.yaml /your/dataset/path" << endl;
         return -1;
     }
 

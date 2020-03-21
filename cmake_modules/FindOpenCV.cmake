@@ -1,13 +1,13 @@
 # - Find OpenCV
 
-set(OpenCV_DIR "~/ws/3rd/opencv/opencv-3.4.5_contrib/build")
+#set(OpenCV_DIR "~/ws/3rd/opencv/opencv-3.4.5_contrib/build")
 
 find_package(OpenCV QUIET COMPONENTS viz)
 if (OpenCV_FOUND)
     add_definitions(-DHAVE_VIZ)
     message(STATUS "OpenCV-module viz is found. Build with viz.")
 else()
-    message(STATUS "OpenCV-module viz is not found. Build without viz.")
+    message(STATUS "OpenCV-module viz is not found. Build without viz. You can specify your own 'OpenCV_DIR' which may include viz.")
 endif ()
 
 find_package(OpenCV REQUIRED)

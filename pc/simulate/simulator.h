@@ -32,6 +32,7 @@ private:
     bool have_anchor_;
     V3d t_w_m_;
     float scale_;
+    cv::VideoWriter writer_;
 #ifdef HAVE_VIZ
     shared_ptr<Visualizer> visualizer_;
 #endif

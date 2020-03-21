@@ -13,6 +13,7 @@ Simulator::Simulator(const string &config_file_path, const string &dataset_path)
     scale_ = AR_SCALE;
     have_anchor_ = false;
     imshow_pause_ = true;
+    writer_ = cv::VideoWriter("./out.avi", CV_FOURCC('X','V','I','D'), 30, cv::Size(640, 480), true);
 #ifdef HAVE_VIZ
     visualizer_ = make_shared<Visualizer>();
     visualizer_->addCamera(vo_->getCamera()->K());
@@ -54,6 +55,7 @@ void Simulator::runOdometry() {
             LOGE(TAG, "Unknown data type.");
         }
     }
+    LOGI(TAG, "Odometry finished!");
 #ifdef HAVE_VIZ
     visualizer_->holdOn();
 #endif
@@ -94,6 +96,7 @@ void Simulator::drawAR() {
     cv::putText(ar_img, "Press 'p' to pause or play.", org, 0, 0.8, color, 2);
     string win_name = "ar";
     cv::imshow(win_name, ar_img);
+    writer_ << ar_img;
 
     int pt_click[2] = {-1, -1};
     setMouseCallback(win_name, onMouse, pt_click);
@@ -103,7 +106,7 @@ void Simulator::drawAR() {
     }
 
     if (pt_click[0] > 0) {
-        LOGI(TAG, "Place anchor at -> (%d, %d).", pt_click[0], pt_click[1]);
+        LOGD(TAG, "Place anchor at -> (%d, %d).", pt_click[0], pt_click[1]);
         t_w_m_ = H_c_w.inverse() * V3d(pt_click[0], pt_click[1], 1);
         have_anchor_ = true;
         /// todo: exist bugs, fix them
