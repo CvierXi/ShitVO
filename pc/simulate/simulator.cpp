@@ -68,7 +68,7 @@ cv::Point2f getHomoPixel(const V3d& P_w, const M3d& H_c_w) {
 }
 
 void onMouse(int event, int x, int y, int flags, void* userdata) {
-    if (event == EVENT_LBUTTONDOWN) {
+    if (event == cv::EVENT_LBUTTONDOWN) {
         auto* data = (int*)userdata;
         data[0] = x;
         data[1] = y;
@@ -80,26 +80,26 @@ void Simulator::drawAR() {
     M3d H_c_w = vo_->getHomography();
 
     if (have_anchor_) {
-        vector<Point> vertexes;
+        vector<cv::Point> vertexes;
         vertexes.push_back(getHomoPixel(t_w_m_ + V3d(-scale_, -scale_, 0), H_c_w));
         vertexes.push_back(getHomoPixel(t_w_m_ + V3d(+scale_, -scale_, 0), H_c_w));
         vertexes.push_back(getHomoPixel(t_w_m_ + V3d(+scale_, +scale_, 0), H_c_w));
         vertexes.push_back(getHomoPixel(t_w_m_ + V3d(-scale_, +scale_, 0), H_c_w));
 
-        fillConvexPoly(ar_img, vertexes, Scalar(0, 255, 0));
+        fillConvexPoly(ar_img, vertexes, cv::Scalar(0, 255, 0));
     } else {
         LOGD(TAG, "No any anchor. You can place an anchor by clicking the window.");
     }
 
     cv::Point2f org(0, ar_img.rows - 15);
-    cv::Scalar color  = imshow_pause_ ? Scalar(0, 0, 255) : Scalar(255, 0, 255);
+    cv::Scalar color  = imshow_pause_ ? cv::Scalar(0, 0, 255) : cv::Scalar(255, 0, 255);
     cv::putText(ar_img, "Press 'p' to pause or play.", org, 0, 0.8, color, 2);
     string win_name = "ar";
     cv::imshow(win_name, ar_img);
     writer_ << ar_img;
 
     int pt_click[2] = {-1, -1};
-    setMouseCallback(win_name, onMouse, pt_click);
+    cv::setMouseCallback(win_name, onMouse, pt_click);
     int ch = imshow_pause_ ? cv::waitKey() : cv::waitKey(30);
     if (ch == 'p' || ch == 'P') {
         imshow_pause_ = !imshow_pause_;
@@ -107,10 +107,11 @@ void Simulator::drawAR() {
 
     if (pt_click[0] > 0) {
         LOGD(TAG, "Place anchor at -> (%d, %d).", pt_click[0], pt_click[1]);
-        t_w_m_ = H_c_w.inverse() * V3d(pt_click[0], pt_click[1], 1);
+        vo_->reset();
+        M3d H_c_w_new = vo_->getHomography();
+        t_w_m_ = H_c_w_new.inverse() * V3d(pt_click[0], pt_click[1], 1);
         have_anchor_ = true;
-        /// todo: exist bugs, fix them
-//        vo_->reset();
+
     }
 }
 

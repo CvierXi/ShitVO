@@ -4,6 +4,8 @@
 
 #include "visualizer.h"
 
+#ifdef HAVE_VIZ
+
 Visualizer::Visualizer() {
     /// Create a window
     myWindow_ = viz::Viz3d("World Frame");
@@ -63,3 +65,5 @@ void Visualizer::holdOn() {
 Point3d Visualizer::getPointInWorld(const V3d& p) {
     return {p(0), p(1), p(2)};
 }
+
+#endif

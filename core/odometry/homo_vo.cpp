@@ -41,13 +41,18 @@ HomoVo::HomoVo(const string& config_file_path) {
     time_img_ = -1;
     R_b_c_ << 0, -1, 0, -1, 0, 0, 0, 0, -1;
 
-    reset();
+//    reset();
 }
 
 void HomoVo::reset() {
     H_c_c0_.setIdentity();
     t_w_c0_ = V3d(0, 0, 1);
     is_init_ = false;
+    R_w_c0_ = R_w_b_ * R_b_c_;
+    M3d R_c0_w = R_w_c0_.transpose();
+    V3d t_c0_w = -R_c0_w * t_w_c0_;
+    util::constructHomographyFromPose(H_c0_w_, R_c0_w, t_c0_w);
+    H_c_w_ = H_c_c0_ * H_c0_w_;
 }
 
 void HomoVo::imuCallback(double timestamp, const M3d& R_w_b) {
@@ -73,10 +78,7 @@ void HomoVo::computeCameraPose() {
 //    front_tracker_->getTrackPoints(track_src_pts, track_dst_pts);
     bool track_suc = false;
     if (!is_init_) {
-        R_w_c0_ = R_w_b_ * R_b_c_;
-        M3d R_c0_w = R_w_c0_.transpose();
-        V3d t_c0_w = -R_c0_w * t_w_c0_;
-        util::constructHomographyFromPose(H_c0_w_, R_c0_w, t_c0_w);
+        reset();
         pose_.state = STATE_INIT;
         LOGI(TAG, "Init!");
         is_init_ = true;

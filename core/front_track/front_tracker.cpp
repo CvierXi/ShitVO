@@ -58,6 +58,15 @@ void FrontTracker::getTrackPoints(vector<cv::Point2f>& track_src_pts, vector<cv:
     track_dst_pts = track_dst_pts_;
 }
 
+/*
+ * To ensure the mathmatic stability for calculating about p(p_x, p_y, 1), because p_x can be 600 times than p_z!
+ * There are kinds of normlization methods, such as
+ *   - scale to [0,1]
+ *   - scale to [-1,1]
+ *   - using unit bearing vector
+ *   - using centroid of points
+ *   - ...
+ */
 void FrontTracker::getTrackPointsNormalized(vector<cv::Point2f>& track_src_pts, vector<cv::Point2f>& track_dst_pts) {
     int num_pts = track_src_pts_.size();
     if (num_pts == 0) {
@@ -93,6 +102,7 @@ void FrontTracker::trackFeatures() {
     }
 }
 
+/// todo: use continuous feature_track
 void FrontTracker::addFeatures() {
     next_pts_.clear();
 //    next_pts_.assign(track_dst_pts_.begin(), track_dst_pts_.end());
